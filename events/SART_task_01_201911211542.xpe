@@ -1,0 +1,52 @@
+#Expyriment 0.10.0 (Python 3.7.3), .xpe-file, coding: cp1252
+#date: Thu Nov 21 2019 15:42:19
+#sha1: 96387e
+#modules: 
+#display: size=(1920, 1080), window_mode=False, open_gl=2
+#os: uname_result(system='Windows', node='DESKTOP-RRRIG19', release='10', version='10.0.18362', machine='AMD64', processor='Intel64 Family 6 Model 158 Stepping 9, GenuineIntel')
+Time,Type,Event,Value,Detail,Detail2
+16497,design,log,
+#design: #exp: SART_task
+#design: block_cnt,block_id,trial_cnt,trial_id
+16497,design,logged,
+16497,Experiment,started
+16510,Stimulus,presented,3
+17010,Stimulus,presented,2
+17508,Keyboard,received,276,wait
+17547,Stimulus,presented,4
+18525,Stimulus,presented,6
+19024,Stimulus,presented,5
+19740,Keyboard,received,276,wait
+19778,Stimulus,presented,7
+20756,Stimulus,presented,9
+21255,Stimulus,presented,8
+23055,Keyboard,received,276,wait
+23104,Stimulus,presented,10
+24070,Stimulus,presented,12
+24569,Stimulus,presented,11
+24910,Keyboard,received,275,wait
+24930,Stimulus,played,b'C:\\Users\\install\\AppData\\Local\\Temp\\expyriment_zn77jkz9\\freq2000_dur200.0_da4_mdv3.wav'
+24969,Stimulus,presented,14
+25935,Stimulus,presented,16
+26451,Stimulus,presented,15
+26867,Keyboard,received,275,wait
+26904,Stimulus,presented,17
+27883,Stimulus,presented,19
+28383,Stimulus,presented,18
+28834,Keyboard,received,275,wait
+28882,Stimulus,presented,20
+29848,Stimulus,presented,22
+30348,Stimulus,presented,21
+30885,Keyboard,received,275,wait
+30931,Stimulus,presented,23
+31896,Stimulus,presented,25
+32396,Stimulus,presented,24
+32862,Keyboard,received,275,wait
+32898,Stimulus,presented,26
+33878,Stimulus,presented,28
+34377,Stimulus,presented,27
+34957,Keyboard,received,275,wait
+34994,Stimulus,presented,29
+35958,Experiment,ended
+35967,Data,saved
+35976,Stimulus,presented,30
