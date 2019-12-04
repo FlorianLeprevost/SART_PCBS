@@ -7,7 +7,8 @@
 from expyriment import control, stimuli, design, misc
 from random import randint
 
-
+#crée une liste pseudo random de chiffres pour créer des stimuli  avec le nombre
+#total de stimuli et le nombre de no-go trial voulu (defini dans main)
 def list_creation(nb_el_block, nb_nogo):
     numbers = list(range(0,10))
     numbers.remove(3)
@@ -28,7 +29,15 @@ def list_creation(nb_el_block, nb_nogo):
 
     return block_list
 
+#creer les probes
+instructions = stimuli.TextLine(text="Thank you for participating in this experiment."")
+stim.present()
+exp.keyboard.wait(misc.constants.K_SPACE)
 
+
+
+
+#fait un block
 def blocks(nb_el_block, nb_nogo, exp, block_name):
     #random size out of 5
     font_sizes_list = [48, 72, 94, 100, 120 ]
@@ -61,6 +70,11 @@ def main():
     control.set_develop_mode(on=True)  ## Set develop mode. Comment for real experiment
     control.initialize(exp)
     control.start()
+
+    #crée data file for probes (and reaction time variability)
+    data_probe_name = ['probe_data', exp.subject]
+    data_file_name = ['probe_data', exp.subject, '.txt']
+    globals()[''.join(data_probe_name)] = open(globals()[''.join(data_file_name)], "w")
 
     exp.data_variable_names = ["digit", "btn", "rt", "error", "block_name"]
 #practice block
