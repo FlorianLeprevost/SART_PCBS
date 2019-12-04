@@ -30,9 +30,11 @@ def list_creation(nb_el_block, nb_nogo):
     return block_list
 
 #creer les probes
-instructions = stimuli.TextLine(text="Thank you for participating in this experiment."")
+instructions = stimuli.TextLine(text="From -10 to 10.\
+\n How are your thoughts related to the task?\
+\n [totally related] -10 -5 0 5 10 [totally unrelated]")
 stim.present()
-exp.keyboard.wait(misc.constants.K_SPACE)
+button_p, rt_p = exp.keyboard.wait(misc.constants.K_ALL_DIGITS)
 
 
 
@@ -70,13 +72,15 @@ def main():
     control.set_develop_mode(on=True)  ## Set develop mode. Comment for real experiment
     control.initialize(exp)
     control.start()
+    exp.data_variable_names = ["digit", "btn", "rt", "error", "block_name"]
 
-    #crée data file for probes (and reaction time variability)
+#crée data file for probes (and reaction time variability)
     data_probe_name = ['probe_data', exp.subject]
     data_file_name = ['probe_data', exp.subject, '.txt']
-    globals()[''.join(data_probe_name)] = open(globals()[''.join(data_file_name)], "w")
+    globals()[''.join(data_probe_name)] = open(''.join(data_file_name), "w")
+    globals()[''.join(data_probe_name)].write(list('block_number', 'trial_number', 'relatedness', 'control'))
+    globals()[''.join(data_probe_name)].close
 
-    exp.data_variable_names = ["digit", "btn", "rt", "error", "block_name"]
 #practice block
     instructions = stimuli.TextLine(text="Thank you for participating in this experiment. \
     \nThe task is very simple : you will see numbers appeat briefly on the screen , followed by a crossed capital X.\

@@ -24,3 +24,4 @@ I used the [Seli 2016 article](https://doi.org/10.1016/j.concog.2016.02.002) to 
 What I had to do
 - [ ] create a different file to get probe data
 - [ ] set the probes to appear randomly during sub-blocks of 45 trials (and not to close to the begining and end of block)
+- [ ] get the reaction-time variability (see [Bastian 2017 REF A COMPLETER](art)) before the probe.
