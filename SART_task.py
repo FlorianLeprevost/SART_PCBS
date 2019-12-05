@@ -29,12 +29,27 @@ def list_creation(nb_el_block, nb_nogo):
 
     return block_list
 
+
 #creer les probes
-instructions = stimuli.TextLine(text="From -10 to 10.\
-\n How are your thoughts related to the task?\
-\n [totally related] -10 -5 0 5 10 [totally unrelated]")
-stim.present()
-button_p, rt_p = exp.keyboard.wait(misc.constants.K_ALL_DIGITS)
+def probes():
+
+    instructions = stimuli.TextLine(text="From 1 to 9.\
+    \n How are your thoughts related to the task?\
+    \n [totally related] 1 2 3 4 5 6 7 8 9 [totally unrelated]")
+    stim.present()
+    button_r, rt_r = exp.keyboard.wait(misc.constants.K_ALL_DIGITS)
+
+    instructions = stimuli.TextLine(text="From 1 to 9.\
+    \n How in control of your train of thought did you feel ? ?\
+    \n [In control] 1 2 3 4 5 6 7 8 9 [Not in control]")
+    stim.present()
+    button_c, rt_c = exp.keyboard.wait(misc.constants.K_ALL_DIGITS)
+
+    return button_r, rt_r, button_c, rt_c
+    
+    globals()[''.join(data_probe_name)] = open(''.join(data_file_name), "a")
+    globals()[''.join(data_probe_name)].write(str(block_name)+str(trial_number)\
+    +str(button_r)+str(rt_r))++str(button_c)+str(rt_c))
 
 
 
@@ -46,8 +61,9 @@ def blocks(nb_el_block, nb_nogo, exp, block_name):
 
     # dont go into full screen mode with this line
     block = list_creation(nb_el_block, nb_nogo)
-
+    trial_number = 0
     for digit in block:
+        trial_number +=1
         f_size = randint(0,4)
         target = stimuli.TextLine(text=str(digit), text_size= font_sizes_list[f_size])
         mask = stimuli.TextLine(text='X\u0336', text_size= font_sizes_list[f_size])
@@ -78,8 +94,7 @@ def main():
     data_probe_name = ['probe_data', exp.subject]
     data_file_name = ['probe_data', exp.subject, '.txt']
     globals()[''.join(data_probe_name)] = open(''.join(data_file_name), "w")
-    globals()[''.join(data_probe_name)].write(list('block_number', 'trial_number', 'relatedness', 'control'))
-    globals()[''.join(data_probe_name)].close
+    globals()[''.join(data_probe_name)].write('block_number, trial_number, relatedness, rt_rel, control, rt_con'))
 
 #practice block
     instructions = stimuli.TextLine(text="Thank you for participating in this experiment. \
