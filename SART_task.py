@@ -7,6 +7,18 @@
 from expyriment import control, stimuli, design, misc
 from random import randint
 
+
+#définir les paramètres (nombre de trials par block, de no_go par block,
+# de probe par block, pour le block practice (p) et pour les real blocks (r))
+nb_el_block_p = 10
+nb_nogo_p = 2
+nb_probes_p = 1
+
+nb_el_block_r = 12
+nb_nogo_r = 2
+nb_probes_r = 3
+
+
 #crée une liste pseudo random de chiffres pour créer des stimuli  avec le nombre
 #total de stimuli et le nombre de no-go trial voulu (defini dans main)
 def list_creation(nb_el_block, nb_nogo):
@@ -46,12 +58,21 @@ def probes():
     button_c, rt_c = exp.keyboard.wait(misc.constants.K_ALL_DIGITS)
 
     return button_r, rt_r, button_c, rt_c
-    
+
     globals()[''.join(data_probe_name)] = open(''.join(data_file_name), "a")
-    globals()[''.join(data_probe_name)].write(str(block_name)+str(trial_number)\
-    +str(button_r)+str(rt_r))++str(button_c)+str(rt_c))
+    globals()[''.join(data_probe_name)].write(str(block_name)+','+str(trial_number)\
+    +','+str(button_r)+','+str(rt_r))+','+str(button_c)+','+str(rt_c))
 
+#determine which trials are gonna have a probe
+def probe_random(nb_el_block, nb_probes):
+    sub_block = round(nb_el_block/nb_probes)
+    limits = round(0.05*sub_block)
+    probe_trials=[]
+    for i in range(nb_probes):
+        probe_tr = randint(sub_block*i +limits, sub_block*(i+1)-limits)
+        probe_trials.append(probe_tr)
 
+    return probe_trials
 
 
 #fait un block
@@ -103,15 +124,11 @@ def main():
     \n\n You also need to know that at random momentsIf you understood well and are ready to do a practice trial, press space bar")
     stim.present()
     exp.keyboard.wait(misc.constants.K_SPACE)
-
-    nb_el_block = 10
-    nb_nogo = 2
     block_name = "practice"
-    blocks(nb_el_block, nb_nogo, exp, block_name)
+    blocks(nb_el_block_p, nb_nogo_p, exp, block_name)
 
 #real blocks
-    nb_el_block = 12
-    nb_nogo = 2
+
     instructions = stimuli.TextLine(text="Instructions:\nYou must press spacebar everytime you see a number EXCEPT when it's the number 3. \
     \nAnswer one the scale about your thoughts when they appear. \
     \n\nIf you are ready for the real experiment, press space bar")
@@ -120,7 +137,7 @@ def main():
 
     for i in range(2):
         block_name = "real" + str(i+1)
-        blocks(nb_el_block, nb_nogo, exp, block_name)
+        blocks(nb_el_block_r, nb_nogo_r, exp, block_name)
         instructions = stimuli.TextLine(text="Ready for the next trial? Press spacebar")
         stim.present()
         exp.keyboard.wait(misc.constants.K_SPACE)
