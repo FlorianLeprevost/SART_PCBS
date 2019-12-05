@@ -66,7 +66,7 @@ def probes():
 #determine which trials are gonna have a probe
 def probe_random(nb_el_block, nb_probes):
     sub_block = round(nb_el_block/nb_probes)
-    limits = round(0.05*sub_block)
+    limits = round(0.1*sub_block)
     probe_trials=[]
     for i in range(nb_probes):
         probe_tr = randint(sub_block*i +limits, sub_block*(i+1)-limits)
@@ -82,6 +82,7 @@ def blocks(nb_el_block, nb_nogo, exp, block_name):
 
     # dont go into full screen mode with this line
     block = list_creation(nb_el_block, nb_nogo)
+    probe_trials = probe_random(nb_el_block, nb_probes)
     trial_number = 0
     for digit in block:
         trial_number +=1
@@ -102,20 +103,18 @@ def blocks(nb_el_block, nb_nogo, exp, block_name):
         error = (button == misc.constants.K_SPACE and digit == 3) or (button == [] and digit !=3)
         exp.data.add([digit, button, rt, int(error), block_name])
 
+        #probe trials
+        if trial_number in probe_trials:
+            button_r, rt_r, button_c, rt_c = probes()
 
-def main():
+            globals()[''.join(data_probe_name)] = open(''.join(data_file_name), "a")
+            globals()[''.join(data_probe_name)].write(str(block_name)+','+str(trial_number)\
+            +','+str(button_r)+','+str(rt_r))+','+str(button_c)+','+str(rt_c))
+            globals()[''.join(data_probe_name)].close
 
-    exp = design.Experiment(name="SART")
-    control.set_develop_mode(on=True)  ## Set develop mode. Comment for real experiment
-    control.initialize(exp)
-    control.start()
-    exp.data_variable_names = ["digit", "btn", "rt", "error", "block_name"]
 
+def main(exp):
 #crée data file for probes (and reaction time variability)
-    data_probe_name = ['probe_data', exp.subject]
-    data_file_name = ['probe_data', exp.subject, '.txt']
-    globals()[''.join(data_probe_name)] = open(''.join(data_file_name), "w")
-    globals()[''.join(data_probe_name)].write('block_number, trial_number, relatedness, rt_rel, control, rt_con'))
 
 #practice block
     instructions = stimuli.TextLine(text="Thank you for participating in this experiment. \
@@ -144,4 +143,20 @@ def main():
 
     control.end(goodbye_text="Thank you very much...", goodbye_delay=2000)
 
-main()
+
+
+exp = design.Experiment(name="SART")
+control.set_develop_mode(on=True)  ## Set develop mode. Comment for real experiment
+control.initialize(exp)
+control.start()
+exp.data_variable_names = ["digit", "btn", "rt", "error", "block_name"]
+
+#fichier probes
+data_probe_name = ['probe_data', exp.subject]
+data_file_name = ['probe_data', exp.subject, '.txt']
+globals()[''.join(data_probe_name)] = open(''.join(data_file_name), "w")
+globals()[''.join(data_probe_name)].write('block_number, trial_number, relatedness, rt_rel, control, rt_con'))
+globals()[''.join(data_probe_name)].close
+
+
+main(exp)
