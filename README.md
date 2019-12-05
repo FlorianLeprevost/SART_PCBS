@@ -22,6 +22,7 @@ What I had to do
 I used the [Seli 2016 article](https://doi.org/10.1016/j.concog.2016.02.002) to determine the probe rate.
 
 What I had to do
-- [ ] create a different file to get probe data
-- [ ] set the probes to appear randomly during sub-blocks of 45 trials (and not to close to the begining and end of block)
+- [x] create a different file to get probe data
+- [x] create a trial number and a block_number var to add in file
+- [x] set the probes to appear randomly during sub-blocks of 45 trials (and not to close to the begining and end of block)
 - [ ] get the reaction-time variability (see [Bastian 2017 REF A COMPLETER](art)) before the probe.
