@@ -14,9 +14,9 @@ nb_el_block_p = 10
 nb_nogo_p = 2
 nb_probes_p = 1
 
-nb_el_block_r = 12
+nb_el_block_r = 10
 nb_nogo_r = 2
-nb_probes_r = 3
+nb_probes_r = 1
 
 
 #crée une liste pseudo random de chiffres pour créer des stimuli  avec le nombre
@@ -45,23 +45,20 @@ def list_creation(nb_el_block, nb_nogo):
 #creer les probes
 def probes():
 
-    instructions = stimuli.TextLine(text="From 1 to 9.\
+    instructions = stimuli.TextScreen(heading = "Hold your thoughts!",text="From 1 to 9.\
     \n How are your thoughts related to the task?\
     \n [totally related] 1 2 3 4 5 6 7 8 9 [totally unrelated]")
-    stim.present()
+    instructions.present()
     button_r, rt_r = exp.keyboard.wait(misc.constants.K_ALL_DIGITS)
 
-    instructions = stimuli.TextLine(text="From 1 to 9.\
+    instructions = stimuli.TextScreen(heading = "", text="From 1 to 9.\
     \n How in control of your train of thought did you feel ? ?\
     \n [In control] 1 2 3 4 5 6 7 8 9 [Not in control]")
-    stim.present()
+    instructions.present()
     button_c, rt_c = exp.keyboard.wait(misc.constants.K_ALL_DIGITS)
 
     return button_r, rt_r, button_c, rt_c
 
-    globals()[''.join(data_probe_name)] = open(''.join(data_file_name), "a")
-    globals()[''.join(data_probe_name)].write(str(block_name)+','+str(trial_number)\
-    +','+str(button_r)+','+str(rt_r))+','+str(button_c)+','+str(rt_c))
 
 #determine which trials are gonna have a probe
 def probe_random(nb_el_block, nb_probes):
@@ -76,7 +73,7 @@ def probe_random(nb_el_block, nb_probes):
 
 
 #fait un block
-def blocks(nb_el_block, nb_nogo, exp, block_name):
+def blocks(nb_el_block, nb_nogo, nb_probes, exp, block_name):
     #random size out of 5
     font_sizes_list = [48, 72, 94, 100, 120 ]
 
@@ -109,7 +106,7 @@ def blocks(nb_el_block, nb_nogo, exp, block_name):
 
             globals()[''.join(data_probe_name)] = open(''.join(data_file_name), "a")
             globals()[''.join(data_probe_name)].write(str(block_name)+','+str(trial_number)\
-            +','+str(button_r)+','+str(rt_r))+','+str(button_c)+','+str(rt_c))
+            +','+str(button_r)+','+str(rt_r)+','+str(button_c)+','+str(rt_c)+ '\n')
             globals()[''.join(data_probe_name)].close
 
 
@@ -117,34 +114,38 @@ def main(exp):
 #crée data file for probes (and reaction time variability)
 
 #practice block
-    instructions = stimuli.TextLine(text="Thank you for participating in this experiment. \
+    instructions = stimuli.TextScreen(heading = "Practise", text="Thank you for participating in this experiment. \
     \nThe task is very simple : you will see numbers appeat briefly on the screen , followed by a crossed capital X.\
     \nYou must press spacebar everytime you see a number EXCEPT when it's the number 3. \
-    \n\n You also need to know that at random momentsIf you understood well and are ready to do a practice trial, press space bar")
-    stim.present()
+    \n\n You also need to know that at random moments, 'thought probes' are going to appear. \
+    Those probes inquire about what you were thinking about, just before they appeared.\
+    \n\nIf you understood well and are ready to do a practice trial, press space bar")
+    instructions.present()
     exp.keyboard.wait(misc.constants.K_SPACE)
     block_name = "practice"
-    blocks(nb_el_block_p, nb_nogo_p, exp, block_name)
+    blocks(nb_el_block_p, nb_nogo_p, nb_probes_p, exp, block_name)
 
 #real blocks
 
-    instructions = stimuli.TextLine(text="Instructions:\nYou must press spacebar everytime you see a number EXCEPT when it's the number 3. \
+    instructions = stimuli.TextScreen(heading = "Experiment",text="Instructions:\nYou must press spacebar everytime you see a number EXCEPT when it's the number 3. \
     \nAnswer one the scale about your thoughts when they appear. \
     \n\nIf you are ready for the real experiment, press space bar")
-    stim.present()
+    instructions.present()
     exp.keyboard.wait(misc.constants.K_SPACE)
 
     for i in range(2):
         block_name = "real" + str(i+1)
-        blocks(nb_el_block_r, nb_nogo_r, exp, block_name)
+        blocks(nb_el_block_r, nb_nogo_r, nb_probes_r, exp, block_name)
         instructions = stimuli.TextLine(text="Ready for the next trial? Press spacebar")
-        stim.present()
+        instructions.present()
         exp.keyboard.wait(misc.constants.K_SPACE)
 
     control.end(goodbye_text="Thank you very much...", goodbye_delay=2000)
 
 
 
+
+## MAIN
 exp = design.Experiment(name="SART")
 control.set_develop_mode(on=True)  ## Set develop mode. Comment for real experiment
 control.initialize(exp)
@@ -152,10 +153,11 @@ control.start()
 exp.data_variable_names = ["digit", "btn", "rt", "error", "block_name"]
 
 #fichier probes
-data_probe_name = ['probe_data', exp.subject]
-data_file_name = ['probe_data', exp.subject, '.txt']
+data_probe_name = ['probe_data', str(exp.subject)]
+data_file_name = ['probe_data', str(exp.subject), '.txt']
 globals()[''.join(data_probe_name)] = open(''.join(data_file_name), "w")
-globals()[''.join(data_probe_name)].write('block_number, trial_number, relatedness, rt_rel, control, rt_con'))
+globals()[''.join(data_probe_name)].write('block_number, trial_number, relatedness\
+, rt_rel, control, rt_con\n')
 globals()[''.join(data_probe_name)].close
 
 
