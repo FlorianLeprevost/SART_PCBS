@@ -27,9 +27,11 @@ What I had to do
 - [x] create a different file to get probe data
 - [x] create a trial number and a block_number var to add in file
 - [x] set the probes to appear randomly during sub-blocks of 45 trials (and not to close to the begining and end of block)
-- [ ] get the reaction-time variability (see [Bastian 2017 REF A COMPLETER](art)) before the probe.
+
 
 ### 1.1.3) Difficulty levels
+Again, I used I used the [Seli 2016 article](https://doi.org/10.1016/j.concog.2016.02.002) to create the easy SART task.
+- [x] change the way block lists are created
 
 ## 1.2) SART code
 ### 1.2.1) Stim
@@ -96,3 +98,14 @@ if rt != None:
 ```
 
 ### 1.2.3) Several blocks
+
+# 2) Data analysis
+## 2.1) Analysis explanation and steps
+### 2.1.1) Get data
+Create a data frame with the subject number, probe scores, and reaction time variability
+- [ ] data.frame with subject + probe score
+- [ ] get the reaction-time variability (see [Bastian & Sackur 2013](https://www.frontiersin.org/articles/10.3389/fpsyg.2013.00573/full) before the probe.
+
+Also check the skill index for control
+- [ ] get the skill index (mean no-go-trial accuracy divided by mean go-trial RT; Jonker, Seli, Cheyne, &
+Smilek, 2013) for each subject for each task.
