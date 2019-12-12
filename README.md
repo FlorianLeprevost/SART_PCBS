@@ -32,6 +32,7 @@ What I had to do
 ### 1.1.3) Difficulty levels
 
 ## 1.2) SART code
+### 1.2.1) Stim
 Create a list of numbers to display (block_list)
 
 ```python
@@ -53,9 +54,45 @@ if compt < nb_nogo and 3 not in block_list[-5:]:
 Make sure I have the right number of no-go trials
 ```python
 while compt<nb_nogo:
-    loca= randint(0,nb_el_block-1)
-    if 3 not in block_list[loca-5 : loca+5]:
+    loca= randint(0,nb_el_block-1)              #any position in the list I just made
+    if 3 not in block_list[loca-5 : loca+5]:    #that is not too close to another no-go
         block_list[loca]=3
         compt +=1
 
 ```
+
+### 1.2.2) Classic block
+For the gist of the code of a block, I copied from an example on the [expyriment stash of example on GitHub](https://github.com/expyriment/expyriment-stash/tree/master/examples). It's pretty straight forward
+
+```python
+block = list_creation(nb_el_block, nb_nogo)     #I create stim with the code of 1.1.1)
+trial_number = 0
+for digit in block:
+    trial_number +=1
+    target = stimuli.TextLine(text=str(digit))
+    mask = stimuli.TextLine(text='X\u0336')
+    target.present()
+    exp.clock.wait(250)
+    mask.present()
+    button, rt = exp.keyboard.wait(misc.constants.K_SPACE, 900)   #get response and reaction time
+    error = (button == misc.constants.K_SPACE and digit == 3) or (button == [] and digit !=3)
+
+    exp.data.add([digit, button, rt, int(error), block_name])     # save the data
+```
+
+I added some subtleties like:
+- varying font sizes
+```python
+font_sizes_list = [48, 72, 94, 100, 120 ]
+...
+f_size = randint(0,4)
+target = stimuli.TextLine(text=str(digit), text_size= font_sizes_list[f_size])
+```
+- make sure the ISI stays at 1150 ms
+```python
+if rt != None:
+        time_left = 900-rt
+        exp.clock.wait(time_left - stimuli.BlankScreen().present())
+```
+
+### 1.2.3) Several blocks
