@@ -1,8 +1,18 @@
-# Ce programme est destiné à lancer une tache SART (avec 2 conditions de difficultés)
-# ainsi que des "thought probes" qui apparaitront en fonction de la variabilité des RTs des 8derniers essais
-# voir README.md pour explicatino de cet aspect
-#https://scienceofbehaviorchange.org/measures/sustained-attention-to-response-task/ pour détails
+"""This programm launches a sustained-attention-to-response task (SART; https://scienceofbehaviorchange.org/measures/sustained-attention-to-response-task/)
+Make sure your arguments are correct, the following is the classic SART
+Practice block :
+    nb_el_block_p = 160
+    nb_nogo_p = 8
+    nb_probes_p = 14
+Real blocks :
+    nb_block_r = 4
+    nb_el_block_r = 260
+    nb_nogo_r = 18
+    nb_probes_r = 20
 
+
+
+"""
 
 from expyriment import control, stimuli, design, misc
 from random import randint
@@ -14,6 +24,7 @@ nb_el_block_p = 10
 nb_nogo_p = 2
 nb_probes_p = 1
 
+nb_block_r = 2
 nb_el_block_r = 10
 nb_nogo_r = 2
 nb_probes_r = 1
@@ -22,6 +33,8 @@ nb_probes_r = 1
 #crée une liste pseudo random de chiffres pour créer des stimuli  avec le nombre
 #total de stimuli et le nombre de no-go trial voulu (defini dans main)
 def list_creation(nb_el_block, nb_nogo):
+    """ Creates a list that provides stimuli for a block of SART, with the right number of go and nogo trials"""
+
     numbers = list(range(0,10))
     numbers.remove(3)
     compt = 0
@@ -44,6 +57,7 @@ def list_creation(nb_el_block, nb_nogo):
 
 #creer les probes
 def probes():
+    """Displays thought probes and return the answers"""
 
     instructions = stimuli.TextScreen(heading = "Hold your thoughts!",text="From 1 to 9.\
     \n How are your thoughts related to the task?\
@@ -62,6 +76,8 @@ def probes():
 
 #determine which trials are gonna have a probe
 def probe_random(nb_el_block, nb_probes):
+    """Determines after which trials the thought probes are going to appear"""
+
     sub_block = round(nb_el_block/nb_probes)
     limits = round(0.1*sub_block)
     probe_trials=[]
@@ -74,6 +90,13 @@ def probe_random(nb_el_block, nb_probes):
 
 #fait un block
 def blocks(nb_el_block, nb_nogo, nb_probes, exp, block_name):
+    """Run a block of trials with the inputed parameters
+    Saves in the expyriment data file : subject_id, stimulus (digit), button pressed (always space), RT , error, block name
+    Saves in the manually created data file : block name, trial number, reponse and rt to both Probes
+
+    Is used once for the practice block and another number of time (chosen in the parameters) for the real blocks
+    """
+
     #random size out of 5
     font_sizes_list = [48, 72, 94, 100, 120 ]
 
@@ -111,6 +134,7 @@ def blocks(nb_el_block, nb_nogo, nb_probes, exp, block_name):
 
 
 def main(exp):
+    """Displays the instructions and successively lauches each block """
 #crée data file for probes (and reaction time variability)
 
 #practice block
@@ -133,7 +157,7 @@ def main(exp):
     instructions.present()
     exp.keyboard.wait(misc.constants.K_SPACE)
 
-    for i in range(2):
+    for i in range(nb_block_r):
         block_name = "real" + str(i+1)
         blocks(nb_el_block_r, nb_nogo_r, nb_probes_r, exp, block_name)
         instructions = stimuli.TextLine(text="Ready for the next trial? Press spacebar")
