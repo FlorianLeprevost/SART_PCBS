@@ -6,21 +6,59 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(root.dir = 'SART_PCBS')
+
 ```
 
 # Objectives
 List of data wrangling and analysis to do:
 
-- [ ] Create a dataframe with an observation per probe, including : subject number, probe number, block number, trial number, and :
-  - [ ] probes results (need to be converted from key value to numbers)
-  - [ ] reaction time variability in the last 8 trials
-  - [ ] mean reaction time
+- [ ] Putting it in dataframes
+  - [ ] Read .xpd files with R
+  - [ ] Change .txt files into .csv before reading them
+  
+- [ ] Augment the dataframe with:
+  - [ ] probes results (need to be converted from key value to numbers --> 1-9 = 49-57)
+  - [ ] reaction time variability in the last 8 trials (see [Bastian & Sackur 2013](https://www.frontiersin.org/articles/10.3389/fpsyg.2013.00573/full) )
+  - [ ] mean reaction time in the 8 preceding trials
   
 - Try and reproduce Seli's results
-  - [ ] bin trials by controlled (6-9) vs uncontrolled trials (1-4) of unrelated thoughts (1-4)
-  - [ ] calculate 
+  - [ ] calculate mindwandering rate by type
+    - 
+  - [ ] bin categories to match their data 
+    - deliberate or spontaneous mind wandering = controlled (6-9) or uncontrolled (1-4) unrelated thoughts (1-4)
+  - [ ] mixed ANOVA (with difficulty as between subject, mind-wandering type as within subject, and rate as dependent variable) 
   
 - Other tests
   - [ ] Regression of reaction time variability by control * relatedness
- 
+  - [ ] PCA? 
+  - [ ] MVPA?
+  
+
+#Dataframe
+Need the tidyverse
+
+```{r}
+library(tidyverse)
+```
+read xpd with function from documentation
+```{r echo=false}
+setwd('C:/Users/install/SART_PCBS')
+source('expyriment_data.R')
+```
+
+```{r}
+dtf= read.expyriment.data("data", "SART_task_easy")
+```
+
+
+change txt files (probe data) in csv before transforming them in dataframes
+
+```{r}
+files <- list.files(pattern="*.txt")
+newfiles <- gsub(".txt$", ".csv", files)
+file.rename(files, newfiles)
+```
+
+
+
