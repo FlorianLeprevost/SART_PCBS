@@ -2,7 +2,7 @@
 What I want to do is
 I) first to program in python (1) the SART task (2) with several levels of difficulty (3) with probe apparition depending on the last reaction times
 
-II) Then I want to program in R (1) the data analysis I'm going to do, ideally in a Rmarkdown document. (I'm not yet sure about how I'm going to go with this)
+II) Then I want to program in R (1) the data analysis I'm going to do,  in a Rmarkdown document.
 
 
 # 1) Sustained Attention to Response Task
@@ -13,6 +13,15 @@ The Sustained Attention to Response Task (SART) is a go/no-go task, which demand
 
 I coded the SART task using the information from the [following site](https://scienceofbehaviorchange.org/measures/sustained-attention-to-response-task/).
 
+### 1.1.2) My experiment
+
+I based my experiment on the [Seli 2016 article](https://doi.org/10.1016/j.concog.2016.02.002), but I added some novelties. Their results was that...
+(insert graph)
+
+In COGSCI311 class, we had to think of a new experiment, so I programmed a simplified version of what I thought of
+(insert link to my prez)
+. Instead of using binary choice (Mind wandering or on-task thoughts) I used scales that may more precisely reflect the subjects experience ("how related are your thoughts to the task?"). I also wanted to introduce the notion of agency that is slightly different than what Seli et al. call intention.
+
 What I had to do:
 - [x] create a list of numbers to display
 - [x] make sure I have the right number of no-go trials
@@ -20,7 +29,7 @@ What I had to do:
 - [x] make sure the ISI stayed at 1150ms even when subject answered early
 - [x] random character size display between 5 possible
 
-### 1.1.2) Probes
+### 1.1.3) Probes
 I used the [Seli 2016 article](https://doi.org/10.1016/j.concog.2016.02.002) to determine the probe rate.
 
 What I had to do
@@ -29,7 +38,7 @@ What I had to do
 - [x] set the probes to appear randomly during sub-blocks of 45 trials (and not to close to the begining and end of block)
 
 
-### 1.1.3) Difficulty levels
+### 1.1.4) Difficulty levels
 Again, I used I used the [Seli 2016 article](https://doi.org/10.1016/j.concog.2016.02.002) to create the easy SART task.
 - [x] change the way block lists are created
 
@@ -99,12 +108,7 @@ if rt != None:
 
 ### 1.2.3) Several blocks
 
-# 2) Data analysis
-## 2.1) Analysis explanation and steps
-### 2.1.1) Get data
-Create a data frame with the subject number, probe scores, and reaction time variability
-- [ ] data.frame with subject + probe score
-- [ ] get the reaction-time variability (see [Bastian & Sackur 2013](https://www.frontiersin.org/articles/10.3389/fpsyg.2013.00573/full) before the probe.
+# 2) Data
+To have some data, I made two persons pass a reduced version of the experiment (only one block in each conditino = approx. 15 minutes).
 
-Also check the skill index for control
-- [ ] get the skill index (mean no-go-trial accuracy divided by mean go-trial RT; Jonker, Seli, Cheyne, & Smilek, 2013) for each subject for each task.
+Then I used Rmarkdown to go through and document the data analysis: please see the data_analysis_SART.html ou .Rmd in the folder for more details.
