@@ -24,6 +24,7 @@ nb_el_block_p = 20
 nb_nogo_p = 2
 nb_probes_p = 1
 
+nb_block_r = 1
 nb_el_block_r = 260
 nb_nogo_r = 2
 nb_probes_r = 6
@@ -112,10 +113,10 @@ def main(exp):
 
 #practice block
     instructions = stimuli.TextScreen(heading = "Practise", text="Thank you for participating in this experiment. \
-    \nThe task is very simple : you will see numbers appeat briefly on the screen , followed by a crossed capital X.\
+    \nThe task is very simple : you will see numbers appear briefly on the screen, followed by a crossed capital X.\
     \nYou must press spacebar everytime you see a number EXCEPT when it's the number 3. \
     \n\n You also need to know that at random moments, 'thought probes' are going to appear. \
-    Those probes inquire about what you were thinking about, just before they appeared.\
+    \nThose probes inquire about what you were thinking about, just before they appeared.\
     \n\nIf you understood well and are ready to do a practice trial, press space bar")
     instructions.present()
     exp.keyboard.wait(misc.constants.K_SPACE)
@@ -125,12 +126,12 @@ def main(exp):
 #real blocks
 
     instructions = stimuli.TextScreen(heading = "Experiment",text="Instructions:\nYou must press spacebar everytime you see a number EXCEPT when it's the number 3. \
-    \nAnswer one the scale about your thoughts when they appear. \
+    \nAnswer on the scaleS about your thoughts when they appear. \
     \n\nIf you are ready for the real experiment, press space bar")
     instructions.present()
     exp.keyboard.wait(misc.constants.K_SPACE)
 
-    for i in range(2):
+    for i in range(nb_block_r):
         block_name = "real" + str(i+1)
         blocks(nb_el_block_r, nb_nogo_r, nb_probes_r, exp, block_name)
         instructions = stimuli.TextLine(text="Ready for the next trial? Press spacebar")

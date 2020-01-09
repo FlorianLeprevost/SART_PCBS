@@ -139,7 +139,7 @@ def main(exp):
 
 #practice block
     instructions = stimuli.TextScreen(heading = "Practise", text="Thank you for participating in this experiment. \
-    \nThe task is very simple : you will see numbers appeat briefly on the screen , followed by a crossed capital X.\
+    \nThe task is very simple : you will see numbers appear briefly on the screen, followed by a crossed capital X.\
     \nYou must press spacebar everytime you see a number EXCEPT when it's the number 3. \
     \n\n You also need to know that at random moments, 'thought probes' are going to appear. \
     \n Those probes inquire about what you were thinking about, just before they appeared.\
@@ -152,7 +152,7 @@ def main(exp):
 #real blocks
 
     instructions = stimuli.TextScreen(heading = "Experiment",text="Instructions:\nYou must press spacebar everytime you see a number EXCEPT when it's the number 3. \
-    \nAnswer one the scale about your thoughts when they appear. \
+    \nAnswer on the scaleS about your thoughts when they appear. \
     \n\nIf you are ready for the real experiment, press space bar")
     instructions.present()
     exp.keyboard.wait(misc.constants.K_SPACE)
