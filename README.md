@@ -107,5 +107,4 @@ Create a data frame with the subject number, probe scores, and reaction time var
 - [ ] get the reaction-time variability (see [Bastian & Sackur 2013](https://www.frontiersin.org/articles/10.3389/fpsyg.2013.00573/full) before the probe.
 
 Also check the skill index for control
-- [ ] get the skill index (mean no-go-trial accuracy divided by mean go-trial RT; Jonker, Seli, Cheyne, &
-Smilek, 2013) for each subject for each task.
+- [ ] get the skill index (mean no-go-trial accuracy divided by mean go-trial RT; Jonker, Seli, Cheyne, & Smilek, 2013) for each subject for each task.
