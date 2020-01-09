@@ -1,9 +1,19 @@
-# Ce programme est destiné à lancer une tache SART (avec 2 conditions de difficultés)
-# ainsi que des "thought probes" qui apparaitront en fonction de la variabilité des RTs des 8derniers essais
-# voir README.md pour explicatino de cet aspect
-#https://scienceofbehaviorchange.org/measures/sustained-attention-to-response-task/ pour détails
+"""This programm launches an EASY sustained-attention-to-response task (SART; https://scienceofbehaviorchange.org/measures/sustained-attention-to-response-task/)
+Make sure your arguments are correct, the following is the classic SART:
+
+Practice block :
+    nb_el_block_p = 160
+    nb_nogo_p = 8
+    nb_probes_p = 14
+Real blocks :
+    nb_block_r = 4
+    nb_el_block_r = 260
+    nb_nogo_r = 18
+    nb_probes_r = 6
 
 
+
+"""
 from expyriment import control, stimuli, design, misc
 from random import randint
 
@@ -14,9 +24,9 @@ nb_el_block_p = 20
 nb_nogo_p = 2
 nb_probes_p = 1
 
-nb_el_block_r = 20
+nb_el_block_r = 260
 nb_nogo_r = 2
-nb_probes_r = 1
+nb_probes_r = 6
 
 
 #crée une liste pseudo random de chiffres pour créer des stimuli  avec le nombre
@@ -28,13 +38,13 @@ def probes():
 
     instructions = stimuli.TextScreen(heading = "Hold your thoughts!",text="From 1 to 9.\
     \n How are your thoughts related to the task?\
-    \n [totally related] 1 2 3 4 5 6 7 8 9 [totally unrelated]")
+    \n [totally unrelated] 1 2 3 4 5 6 7 8 9 [totally related]")
     instructions.present()
     button_r, rt_r = exp.keyboard.wait(misc.constants.K_ALL_DIGITS)
 
     instructions = stimuli.TextScreen(heading = "", text="From 1 to 9.\
     \n How in control of your train of thought did you feel ? ?\
-    \n [In control] 1 2 3 4 5 6 7 8 9 [Not in control]")
+    \n [Not in control] 1 2 3 4 5 6 7 8 9 [Totally in control]")
     instructions.present()
     button_c, rt_c = exp.keyboard.wait(misc.constants.K_ALL_DIGITS)
 
@@ -134,7 +144,7 @@ def main(exp):
 
 ## MAIN
 exp = design.Experiment(name="SART")
-control.set_develop_mode(on=True)  ## Set develop mode. Comment for real experiment
+control.set_develop_mode(on=False)  ## Set develop mode. Comment for real experiment
 control.initialize(exp)
 control.start()
 exp.data_variable_names = ["digit", "btn", "rt", "error", "block_name"]
