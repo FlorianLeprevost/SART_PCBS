@@ -106,7 +106,40 @@ if rt != None:
         exp.clock.wait(time_left - stimuli.BlankScreen().present())
 ```
 
-### 1.2.3) Several blocks
+### 1.2.3) Experiment and Probes
+I made a "main" function with the instructions, that present the experiment, depending of the parameters of the begining of the script.
+```python
+nb_block_r = 1
+nb_el_block_r = 270
+nb_nogo_r = 18
+nb_probes_r = 6
+```
+I created to function to display the probes (probes) and another one to make sure the probes appeared at pseudo-random interval, not too close to each other (probe-random).
+```python
+
+def probe_random(nb_el_block, nb_probes):
+    sub_block = round(nb_el_block/nb_probes)       #length of intervals within each a probe should appear
+    limits = round(0.1*sub_block)                  #makes sure the probes aren't in the very begining or very end of each interval
+    probe_trials=[]
+    for i in range(nb_probes):                     #produce the trial numbers in chich probes are going to appear
+        probe_tr = randint(sub_block*i +limits, sub_block*(i+1)-limits)
+        probe_trials.append(probe_tr)
+
+    return probe_trials
+```
+
+
+A difficult part was to automatize the creation of file in which the probe data could be stored. For it to work, I had to initialize the experiment and create the files outside of main.
+```python
+#fichier probes
+data_probe_name = ['probe_data', str(exp.subject)]  #retrieve subject number to create the name of the variable and of the file
+data_file_name = ['probe_data', str(exp.subject), '.txt']
+globals()[''.join(data_probe_name)] = open(''.join(data_file_name), "w") # creates and open a file with the number of the subject in it
+globals()[''.join(data_probe_name)].write('block_number, trial_number, relatedness\
+, rt_rel, control, rt_con\n') #write the variable names in the first line
+globals()[''.join(data_probe_name)].close
+```
+
 
 # 2) Data
 To have some data, I made two persons pass a reduced version of the experiment (only one block in each conditino = approx. 15 minutes).
