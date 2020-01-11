@@ -23,7 +23,7 @@ nb_nogo_p = 2
 nb_probes_p = 1
 
 nb_block_r = 1
-nb_el_block_r = 270
+nb_el_block_r = 260
 nb_nogo_r = 18
 nb_probes_r = 6
 
