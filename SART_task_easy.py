@@ -3,12 +3,10 @@ Make sure your arguments are correct, the following is the classic SART:
 
 Practice block :
     nb_el_block_p = 160
-    nb_nogo_p = 8
     nb_probes_p = 14
 Real blocks :
     nb_block_r = 4
     nb_el_block_r = 260
-    nb_nogo_r = 18
     nb_probes_r = 6
 
 
@@ -21,12 +19,10 @@ from random import randint
 #définir les paramètres (nombre de trials par block, de no_go par block,
 # de probe par block, pour le block practice (p) et pour les real blocks (r))
 nb_el_block_p = 20
-nb_nogo_p = 2
 nb_probes_p = 1
 
 nb_block_r = 1
 nb_el_block_r = 260
-nb_nogo_r = 2
 nb_probes_r = 6
 
 
@@ -65,7 +61,7 @@ def probe_random(nb_el_block, nb_probes):
 
 
 #fait un block
-def blocks(nb_el_block, nb_nogo, nb_probes, exp, block_name):
+def blocks(nb_el_block, nb_probes, exp, block_name):
     #random size out of 5
     font_sizes_list = [48, 72, 94, 100, 120 ]
 
@@ -121,7 +117,7 @@ def main(exp):
     instructions.present()
     exp.keyboard.wait(misc.constants.K_SPACE)
     block_name = "practice"
-    blocks(nb_el_block_p, nb_nogo_p, nb_probes_p, exp, block_name)
+    blocks(nb_el_block_p, nb_probes_p, exp, block_name)
 
 #real blocks
 
@@ -133,7 +129,7 @@ def main(exp):
 
     for i in range(nb_block_r):
         block_name = "real" + str(i+1)
-        blocks(nb_el_block_r, nb_nogo_r, nb_probes_r, exp, block_name)
+        blocks(nb_el_block_r, nb_probes_r, exp, block_name)
         instructions = stimuli.TextLine(text="Ready for the next trial? Press spacebar")
         instructions.present()
         exp.keyboard.wait(misc.constants.K_SPACE)
