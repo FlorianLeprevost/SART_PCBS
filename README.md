@@ -15,11 +15,11 @@ I coded the SART task using the information from the [following site](https://sc
 
 ### 1.1.2) My experiment
 
-I based my experiment on the [Seli 2016 article](https://doi.org/10.1016/j.concog.2016.02.002), but I added some novelties. Their results was that...
-(insert graph)
+I based my experiment on the [Seli 2016 article](https://doi.org/10.1016/j.concog.2016.02.002), but I added some novelties. Their results was that
 
-In COGSCI311 class, we had to think of a new experiment, so I programmed a simplified version of what I thought of
-(insert link to my prez)
+![Seli 2016](Seli.png)
+In COGSCI311 class, we had to think of a new experiment, so I programmed a simplified version of [what I thought of](projetv3.pdf)
+
 . Instead of using binary choice (Mind wandering or on-task thoughts) I used scales that may more precisely reflect the subjects experience ("how related are your thoughts to the task?"). I also wanted to introduce the notion of agency that is slightly different than what Seli et al. call intention.
 
 What I had to do:
@@ -107,7 +107,7 @@ if rt != None:
 ```
 
 ### 1.2.3) Experiment and Probes
-I made a "main" function with the instructions, that present the experiment, depending of the parameters of the begining of the script.
+I made a "main" function with the instructions, that present the experiment, depending of the parameters of the beginning of the script. I also put the aforementionned expyriment for loop in a function to be able to call it several times
 ```python
 nb_block_r = 1
 nb_el_block_r = 270
@@ -119,9 +119,9 @@ I created to function to display the probes (probes) and another one to make sur
 
 def probe_random(nb_el_block, nb_probes):
     sub_block = round(nb_el_block/nb_probes)       #length of intervals within each a probe should appear
-    limits = round(0.1*sub_block)                  #makes sure the probes aren't in the very begining or very end of each interval
+    limits = round(0.1*sub_block)                  #makes sure the probes aren't in the very beginning or very end of each interval
     probe_trials=[]
-    for i in range(nb_probes):                     #produce the trial numbers in chich probes are going to appear
+    for i in range(nb_probes):                     #produce the trial numbers in which probes are going to appear
         probe_tr = randint(sub_block*i +limits, sub_block*(i+1)-limits)
         probe_trials.append(probe_tr)
 
@@ -130,6 +130,7 @@ def probe_random(nb_el_block, nb_probes):
 
 
 A difficult part was to automatize the creation of file in which the probe data could be stored. For it to work, I had to initialize the experiment and create the files outside of main.
+
 ```python
 #fichier probes
 data_probe_name = ['probe_data', str(exp.subject)]  #retrieve subject number to create the name of the variable and of the file
@@ -139,9 +140,22 @@ globals()[''.join(data_probe_name)].write('block_number, trial_number, relatedne
 , rt_rel, control, rt_con\n') #write the variable names in the first line
 globals()[''.join(data_probe_name)].close
 ```
+Then an if loop in the "block" function, I could write every answer in the file
+```python
 
+if trial_number in probe_trials:
+    button_r, rt_r, button_c, rt_c = probes()
+
+    globals()[''.join(data_probe_name)] = open(''.join(data_file_name), "a")
+    globals()[''.join(data_probe_name)].write(str(block_name)+','+str(trial_number)\
+    +','+str(button_r)+','+str(rt_r)+','+str(button_c)+','+str(rt_c)+ '\n')
+    globals()[''.join(data_probe_name)].close
+```
+
+### 1.2.4) Easy SART
+To program the easy version of the SART, I deleted the no
 
 # 2) Data
-To have some data, I made two persons pass a reduced version of the experiment (only one block in each conditino = approx. 15 minutes).
+To have some data to analyse, I made two persons pass a reduced version of the experiment (only one block in each condition = approx. 15 minutes).
 
 Then I used Rmarkdown to go through and document the data analysis: please see the data_analysis_SART.html ou .Rmd in the folder for more details.
