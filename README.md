@@ -114,7 +114,7 @@ if rt != None:
 
 ### 1.2.3) Experiment and Probes
 Scripts are put in functions to make the program more functinoal and readable:
-- I made a **main** function with the instructions, that present the experiment, depending of the parameters of the beginning of the script.
+- I made a **main** function that present the instructions and several blocks, depending of the parameters of the beginning of the script.
 ```python
 nb_el_block_p = 10
 nb_nogo_p = 2
@@ -153,7 +153,7 @@ globals()[''.join(data_probe_name)] = open(''.join(data_file_name), "w")
 globals()[''.join(data_probe_name)].write('block_number, trial_number, relatedness, rt_rel, control, rt_con\n')
 globals()[''.join(data_probe_name)].close
 ```
-Then with an "if loop" in the **blocks** function, I could write every answer in the file. I separated the values with comas for later processing.
+Then with an "if loop" in the **blocks** function, I was able write every answer in the file. I separated the values with comas for later processing.
 ```python
 if trial_number in probe_trials:
     button_r, rt_r, button_c, rt_c = probes()
@@ -176,4 +176,4 @@ for i in range(repetitions):
 # 2) Data
 To have some data to analyse, I made two persons pass a reduced version of the experiment (only one block in each condition = approx. 15 minutes).
 
-Then I used Rmarkdown to go through and document the data analysis: please see the data_analysis_SART.html ou .Rmd in the folder for more details.
+Then I used Rmarkdown to go through and document the data analysis: please see the [data_analysis_SART.html](data_analysis_SART.html) ou [.Rmd](data_analysis_SART.Rmd) in the folder for more details.
