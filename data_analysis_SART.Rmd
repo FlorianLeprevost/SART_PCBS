@@ -10,7 +10,7 @@ knitr::opts_chunk$set(root.dir = 'SART_PCBS')
 
 ```
 
-# Objectives
+# 1. Objectives
 List of data wrangling and analysis to do:
 
 - [ ] Putting it in dataframes
@@ -24,7 +24,7 @@ List of data wrangling and analysis to do:
   
 - Try and reproduce Seli's results
   - [ ] calculate mindwandering rate by type
-    - 
+    - (number of deliberate mindwandering reports on total number of reports reports)
   - [ ] bin categories to match their data 
     - deliberate or spontaneous mind wandering = controlled (6-9) or uncontrolled (1-4) unrelated thoughts (1-4)
   - [ ] mixed ANOVA (with difficulty as between subject, mind-wandering type as within subject, and rate as dependent variable) 
@@ -58,6 +58,41 @@ change txt files (probe data) in csv before transforming them in dataframes
 files <- list.files(pattern="*.txt")
 newfiles <- gsub(".txt$", ".csv", files)
 file.rename(files, newfiles)
+```
+
+```{r}
+#get file names
+files= list.files(pattern="*.csv")
+
+#get the difficulty indice and the subject id
+difficulty=list()
+subject_id=list()
+
+for (el in files) {
+  if (substr(el, 12,15) == "easy")  {
+    difficulty[length(difficulty)+1]=0
+    subject_id[length(subject_id)+1]=substr(el, 16,16)
+    
+  }else{
+    difficulty[length(difficulty)+1]=1
+    subject_id[length(subject_id)+1]=substr(el, 11,11)
+  }
+}
+
+#read files
+several_dtf = lapply(files, read.csv)
+#add missing parameters to dataframes
+for (ind in length(several_dtf)){
+  several_dtf[ind] <- several_dtf[ind] %>% 
+    mutate("subject_id"=pull(subject_id[ind])) %>% 
+    mutate("difficulty"=pull(difficulty[ind]))
+}
+#bind dataframes
+dtf_probes = do.call(rbind, several_dtf)
+#add rtv
+
+  
+  
 ```
 
 
