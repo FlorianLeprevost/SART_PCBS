@@ -62,22 +62,25 @@ file.rename(files, newfiles)
 
 ```{r}
 #get file names
-files= list.files(pattern="*.csv")
+files= list.files(pattern=".csv$")
+files_easy = grep("^probe_data_easy", files, value=T)
+files_hard = grep("^probe_data_easy", files, value=T, invert=T)
+
 
 #get the difficulty indice and the subject id
-difficulty=list()
-subject_id=list()
-
-for (el in files) {
-  if (substr(el, 12,15) == "easy")  {
-    difficulty[length(difficulty)+1]=0
-    subject_id[length(subject_id)+1]=substr(el, 16,16)
-    
-  }else{
-    difficulty[length(difficulty)+1]=1
-    subject_id[length(subject_id)+1]=substr(el, 11,11)
-  }
-}
+# difficulty=list()
+# subject_id=list()
+# 
+# for (el in files) {
+#   if (substr(el, 12,15) == "easy")  {
+#     difficulty[length(difficulty)+1]=0
+#     subject_id[length(subject_id)+1]=substr(el, 16,16)
+#     
+#   }else{
+#     difficulty[length(difficulty)+1]=1
+#     subject_id[length(subject_id)+1]=substr(el, 11,11)
+#   }
+# }
 
 #read files
 several_dtf = lapply(files, read.csv)
