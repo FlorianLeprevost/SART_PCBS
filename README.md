@@ -1,9 +1,9 @@
-# SART task + data analysis
-What I want to do is
-I) first to program in python (1) the SART task (2) with several levels of difficulty (3) with probe apparition depending on the last reaction times
+# An experiment of Mind wandering
+What you can find in this document
+- explanation of the proposed task
+- description of the ***python*** code written to program the Task
 
-II) Then I want to program in R (1) the data analysis I'm going to do,  in a Rmarkdown document.
-
+I then did some data analysis in ***R***. Please follow [this link](https://florianleprevost.github.io/SART_PCBS/data_analysis_SART.html) to the html page from the Rmd document I wrote.
 
 # 1) Sustained Attention to Response Task
 
