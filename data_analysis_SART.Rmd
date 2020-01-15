@@ -13,9 +13,10 @@ knitr::opts_chunk$set(root.dir = 'SART_PCBS')
 # 1. Objectives
 List of data wrangling and analysis to do:
 
-- [ ] Putting it in dataframes
-  - [ ] Read .xpd files with R
-  - [ ] Change .txt files into .csv before reading them
+- [x] Putting it in dataframes
+  - [x] Read .xpd files with R
+  - [x] Change .txt files into .csv before reading them
+  - [ ] Add subject id and difficulty
   
 - [ ] Augment the dataframe with:
   - [ ] probes results (need to be converted from key value to numbers --> 1-9 = 49-57)
@@ -38,18 +39,34 @@ List of data wrangling and analysis to do:
 #Dataframe
 Need the tidyverse
 
-```{r}
+```{r echo=false}
 library(tidyverse)
 ```
+## xpd (SART) files
+
 read xpd with function from documentation
 ```{r echo=false}
 setwd('C:/Users/install/SART_PCBS')
 source('expyriment_data.R')
 ```
-
+read and add difficulty
 ```{r}
-dtf= read.expyriment.data("data", "SART_task_easy")
+dtf_sart_easy= read.expyriment.data("data", "SART_task_easy")
+dtf_sart_easy <- dtf_sart_easy %>% 
+  mutate(difficulty=0)
+
+dtf_sart_normal= read.expyriment.data("data", "SART_task_0")
+dtf_sart_normal <- dtf_sart_normal %>% 
+  mutate(difficulty=1)
 ```
+join
+```{r}
+dtf_sart = bind_rows(dtf_sart_easy, dtf_sart_normal)
+```
+
+
+
+## txt (probes) files
 
 
 change txt files (probe data) in csv before transforming them in dataframes
@@ -65,22 +82,24 @@ file.rename(files, newfiles)
 files= list.files(pattern=".csv$")
 files_easy = grep("^probe_data_easy", files, value=T)
 files_hard = grep("^probe_data_easy", files, value=T, invert=T)
+```
 
-
+tried the following complicated method but it didn't work
+```{r}
 #get the difficulty indice and the subject id
-# difficulty=list()
-# subject_id=list()
-# 
-# for (el in files) {
-#   if (substr(el, 12,15) == "easy")  {
-#     difficulty[length(difficulty)+1]=0
-#     subject_id[length(subject_id)+1]=substr(el, 16,16)
-#     
-#   }else{
-#     difficulty[length(difficulty)+1]=1
-#     subject_id[length(subject_id)+1]=substr(el, 11,11)
-#   }
-# }
+difficulty=list()
+subject_id=list()
+
+for (el in files) {
+  if (substr(el, 12,15) == "easy")  {
+    difficulty[length(difficulty)+1]=0
+    subject_id[length(subject_id)+1]=substr(el, 16,16)
+
+  }else{
+    difficulty[length(difficulty)+1]=1
+    subject_id[length(subject_id)+1]=substr(el, 11,11)
+  }
+}
 
 #read files
 several_dtf = lapply(files, read.csv)
@@ -92,10 +111,12 @@ for (ind in length(several_dtf)){
 }
 #bind dataframes
 dtf_probes = do.call(rbind, several_dtf)
-#add rtv
 
-  
-  
+```
+so i cheated a little, using the fact that the subject's files are in order. I indeed used the .id parameter to re-generate subject_id
+```{r}
+several_dtf_easy = lapply(files_easy, read.csv)
+dtf_probes_easy= bind_rows(several_dtf_easy, .id= "subject_id")
 ```
 
 
