@@ -370,31 +370,157 @@ summary {
 
 
 <div id="objectives" class="section level1">
-<h1>Objectives</h1>
+<h1>1. Objectives</h1>
 <p>List of data wrangling and analysis to do:</p>
 <ul>
+<li><input type="checkbox" disabled checked></input>
+Putting it in dataframes<ul>
+<li><input type="checkbox" disabled checked></input>
+Read .xpd files with R</li>
+<li><input type="checkbox" disabled checked></input>
+Change .txt files into .csv before reading them</li>
+<li><input type="checkbox" disabled checked></input>
+Add subject id and difficulty</li>
+</ul></li>
 <li><input type="checkbox" disabled></input>
-Create a dataframe with an observation per probe, including : subject number, probe number, block number, trial number, and :<ul>
+Augment the dataframe with:<ul>
 <li><input type="checkbox" disabled></input>
 probes results (need to be converted from key value to numbers –&gt; 1-9 = 49-57)</li>
 <li><input type="checkbox" disabled></input>
-reaction time variability in the last 8 trials</li>
+reaction time variability in the last 8 trials (see <a href="https://www.frontiersin.org/articles/10.3389/fpsyg.2013.00573/full">Bastian &amp; Sackur 2013</a> )</li>
 <li><input type="checkbox" disabled></input>
-mean reaction time</li>
+mean reaction time in the 8 preceding trials</li>
 </ul></li>
 <li>Try and reproduce Seli’s results
 <ul>
 <li><input type="checkbox" disabled></input>
-bin trials by controlled (6-9) vs uncontrolled trials (1-4) of unrelated thoughts (1-4)</li>
+calculate mindwandering rate by type<ul>
+<li>(number of deliberate mindwandering reports on total number of reports reports)</li>
+</ul></li>
 <li><input type="checkbox" disabled></input>
-calculate</li>
+bin categories to match their data<ul>
+<li>deliberate or spontaneous mind wandering = controlled (6-9) or uncontrolled (1-4) unrelated thoughts (1-4)</li>
+</ul></li>
+<li><input type="checkbox" disabled></input>
+mixed ANOVA (with difficulty as between subject, mind-wandering type as within subject, and rate as dependent variable)</li>
 </ul></li>
 <li>Other tests
 <ul>
 <li><input type="checkbox" disabled></input>
 Regression of reaction time variability by control * relatedness</li>
+<li><input type="checkbox" disabled></input>
+PCA?</li>
+<li><input type="checkbox" disabled></input>
+MVPA?</li>
 </ul></li>
 </ul>
+<p>#Dataframe Need the tidyverse</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<div id="xpd-sart-files" class="section level2">
+<h2>xpd (SART) files</h2>
+<p>read xpd with function from documentation</p>
+<pre class="r"><code>setwd(&#39;C:/Users/install/SART_PCBS&#39;)
+source(&#39;expyriment_data.R&#39;)</code></pre>
+<p>read and add difficulty</p>
+<pre class="r"><code>dtf_sart_easy= read.expyriment.data(&quot;data&quot;, &quot;SART_task_easy&quot;)
+dtf_sart_normal= read.expyriment.data(&quot;data&quot;, &quot;SART_task_0&quot;)
+
+#add difficulty
+dtf_sart_easy &lt;- dtf_sart_easy %&gt;% 
+  mutate(difficulty=0)
+dtf_sart_normal &lt;- dtf_sart_normal %&gt;% 
+  mutate(difficulty=1)</code></pre>
+<p>join</p>
+<pre class="r"><code>dtf_sart = bind_rows(dtf_sart_easy, dtf_sart_normal)
+glimpse(dtf_sart)</code></pre>
+<pre><code>## Observations: 1,120
+## Variables: 7
+## $ subject_id &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,...
+## $ digit      &lt;int&gt; 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8,...
+## $ btn        &lt;int&gt; 32, 32, 32, NA, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, ...
+## $ rt         &lt;int&gt; 374, 213, 218, NA, 23, 240, 204, 250, 250, 479, 325, 211...
+## $ error      &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,...
+## $ block_name &lt;fct&gt; practice, practice, practice, practice, practice, practi...
+## $ difficulty &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,...</code></pre>
+</div>
+<div id="txt-probes-files" class="section level2">
+<h2>txt (probes) files</h2>
+<p>change txt files (probe data) in csv before transforming them in dataframes</p>
+<pre class="r"><code>files &lt;- list.files(pattern=&quot;*.txt&quot;)
+newfiles &lt;- gsub(&quot;.txt$&quot;, &quot;.csv&quot;, files)
+file.rename(files, newfiles)</code></pre>
+<pre><code>## logical(0)</code></pre>
+<pre class="r"><code>#get file names
+files= list.files(pattern=&quot;.csv$&quot;)
+files_easy = grep(&quot;^probe_data_easy&quot;, files, value=T)
+files_normal = grep(&quot;^probe_data_easy&quot;, files, value=T, invert=T)</code></pre>
+<p>tried the following complicated method but it didn’t work</p>
+<pre class="r"><code>#get the difficulty indice and the subject id
+difficulty=list()
+subject_id=list()
+
+for (el in files) {
+  if (substr(el, 12,15) == &quot;easy&quot;)  {
+    difficulty[length(difficulty)+1]=0
+    subject_id[length(subject_id)+1]=substr(el, 16,16)
+
+  }else{
+    difficulty[length(difficulty)+1]=1
+    subject_id[length(subject_id)+1]=substr(el, 11,11)
+  }
+}
+
+#read files
+several_dtf = lapply(files, read.csv)
+#add missing parameters to dataframes
+for (ind in length(several_dtf)){
+  several_dtf[ind] &lt;- several_dtf[ind] %&gt;%
+    mutate(&quot;subject_id&quot;=pull(subject_id[ind])) %&gt;%
+    mutate(&quot;difficulty&quot;=pull(difficulty[ind]))
+}
+#bind dataframes
+dtf_probes = do.call(rbind, several_dtf)</code></pre>
+<p>so i cheated a little, using the fact that the subject’s files are in order. I indeed used the .id parameter to re-generate subject_id. Then I used mutate to add difficulty</p>
+<pre class="r"><code>#add subject-id
+several_dtf_easy = lapply(files_easy, read.csv)
+dtf_probes_easy= bind_rows(several_dtf_easy, .id= &quot;subject_id&quot;)
+
+several_dtf_normal = lapply(files_normal, read.csv)
+dtf_probes_normal= bind_rows(several_dtf_normal, .id= &quot;subject_id&quot;)
+
+#add difficulty
+dtf_probes_easy &lt;- dtf_probes_easy %&gt;% 
+  mutate(difficulty=0)
+dtf_probes_normal &lt;- dtf_probes_normal %&gt;% 
+  mutate(difficulty=1)
+
+#join
+dtf_probes = bind_rows(dtf_probes_easy, dtf_probes_normal)
+
+#preview
+glimpse(dtf_probes)</code></pre>
+<pre><code>## Observations: 28
+## Variables: 8
+## $ subject_id   &lt;chr&gt; &quot;1&quot;, &quot;1&quot;, &quot;1&quot;, &quot;1&quot;, &quot;1&quot;, &quot;1&quot;, &quot;1&quot;, &quot;2&quot;, &quot;2&quot;, &quot;2&quot;, &quot;2&quot;,...
+## $ block_number &lt;fct&gt; practice, real1, real1, real1, real1, real1, real1, pr...
+## $ trial_number &lt;int&gt; 9, 27, 70, 96, 168, 192, 254, 6, 11, 78, 106, 156, 186...
+## $ relatedness  &lt;int&gt; 53, 55, 55, 55, 50, 55, 53, 54, 51, 56, 56, 55, 49, 55...
+## $ rt_rel       &lt;int&gt; 8644, 7113, 5995, 12069, 5362, 4934, 3884, 29951, 5027...
+## $ control      &lt;int&gt; 51, 53, 55, 53, 57, 52, 56, 52, 50, 57, 49, 55, 50, 51...
+## $ rt_con       &lt;int&gt; 3781, 2571, 6244, 2263, 1730, 2361, 1320, 3544, 1417, ...
+## $ difficulty   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, ...</code></pre>
+<p>simple method to transform the keys into numbers</p>
+<pre class="r"><code>#create some kind of dictionnary
+dico= 1:9
+names(dico)=49:57
+#transform into numbers
+dtf_probes &lt;- dtf_probes %&gt;% 
+  mutate(relatedness= dico[as.character(relatedness)]) %&gt;% 
+  mutate(control=dico[as.character(control)])</code></pre>
+</div>
+<div id="get-rtv-in-dtf-probes" class="section level2">
+<h2>get rtv in dtf probes</h2>
+</div>
 </div>
 
 

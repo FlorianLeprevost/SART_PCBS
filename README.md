@@ -1,6 +1,6 @@
-# An experiment of Mind wandering
+# Agency in Mind wandering
 What you can find in this document
-- explanation of the proposed task
+- explanation of the proposed task and the reasons for it
 - description of the ***python*** code written to program the Task
 
 I then did some data analysis in ***R***. Please follow [this link](https://florianleprevost.github.io/SART_PCBS/data_analysis_SART.html) to the html page from the Rmd document I wrote.

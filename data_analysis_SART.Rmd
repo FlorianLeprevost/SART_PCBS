@@ -6,8 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(root.dir = 'SART_PCBS')
-
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
 # 1. Objectives
@@ -16,7 +15,7 @@ List of data wrangling and analysis to do:
 - [x] Putting it in dataframes
   - [x] Read .xpd files with R
   - [x] Change .txt files into .csv before reading them
-  - [ ] Add subject id and difficulty
+  - [x] Add subject id and difficulty
   
 - [ ] Augment the dataframe with:
   - [ ] probes results (need to be converted from key value to numbers --> 1-9 = 49-57)
@@ -39,29 +38,31 @@ List of data wrangling and analysis to do:
 #Dataframe
 Need the tidyverse
 
-```{r echo=false}
+```{r message=F, warning=F}
 library(tidyverse)
 ```
 ## xpd (SART) files
 
 read xpd with function from documentation
-```{r echo=false}
+```{r}
 setwd('C:/Users/install/SART_PCBS')
 source('expyriment_data.R')
 ```
 read and add difficulty
-```{r}
+```{r message=F, warning=F}
 dtf_sart_easy= read.expyriment.data("data", "SART_task_easy")
+dtf_sart_normal= read.expyriment.data("data", "SART_task_0")
+
+#add difficulty
 dtf_sart_easy <- dtf_sart_easy %>% 
   mutate(difficulty=0)
-
-dtf_sart_normal= read.expyriment.data("data", "SART_task_0")
 dtf_sart_normal <- dtf_sart_normal %>% 
   mutate(difficulty=1)
 ```
 join
 ```{r}
 dtf_sart = bind_rows(dtf_sart_easy, dtf_sart_normal)
+glimpse(dtf_sart)
 ```
 
 
@@ -71,7 +72,7 @@ dtf_sart = bind_rows(dtf_sart_easy, dtf_sart_normal)
 
 change txt files (probe data) in csv before transforming them in dataframes
 
-```{r}
+```{r message=F, warning=F}
 files <- list.files(pattern="*.txt")
 newfiles <- gsub(".txt$", ".csv", files)
 file.rename(files, newfiles)
@@ -81,11 +82,11 @@ file.rename(files, newfiles)
 #get file names
 files= list.files(pattern=".csv$")
 files_easy = grep("^probe_data_easy", files, value=T)
-files_hard = grep("^probe_data_easy", files, value=T, invert=T)
+files_normal = grep("^probe_data_easy", files, value=T, invert=T)
 ```
 
 tried the following complicated method but it didn't work
-```{r}
+```{r eval=FALSE}
 #get the difficulty indice and the subject id
 difficulty=list()
 subject_id=list()
@@ -105,19 +106,48 @@ for (el in files) {
 several_dtf = lapply(files, read.csv)
 #add missing parameters to dataframes
 for (ind in length(several_dtf)){
-  several_dtf[ind] <- several_dtf[ind] %>% 
-    mutate("subject_id"=pull(subject_id[ind])) %>% 
+  several_dtf[ind] <- several_dtf[ind] %>%
+    mutate("subject_id"=pull(subject_id[ind])) %>%
     mutate("difficulty"=pull(difficulty[ind]))
 }
 #bind dataframes
 dtf_probes = do.call(rbind, several_dtf)
 
 ```
-so i cheated a little, using the fact that the subject's files are in order. I indeed used the .id parameter to re-generate subject_id
-```{r}
+so i cheated a little, using the fact that the subject's files are in order. I indeed used the .id parameter to re-generate subject_id. Then I used mutate to add difficulty
+```{r message=F, warning=F}
+#add subject-id
 several_dtf_easy = lapply(files_easy, read.csv)
 dtf_probes_easy= bind_rows(several_dtf_easy, .id= "subject_id")
+
+several_dtf_normal = lapply(files_normal, read.csv)
+dtf_probes_normal= bind_rows(several_dtf_normal, .id= "subject_id")
+
+#add difficulty
+dtf_probes_easy <- dtf_probes_easy %>% 
+  mutate(difficulty=0)
+dtf_probes_normal <- dtf_probes_normal %>% 
+  mutate(difficulty=1)
+
+#join
+dtf_probes = bind_rows(dtf_probes_easy, dtf_probes_normal)
+
+#preview
+glimpse(dtf_probes)
 ```
 
+simple method to transform the keys into numbers
+```{r}
+#create some kind of dictionnary
+dico= 1:9
+names(dico)=49:57
+#transform into numbers
+dtf_probes <- dtf_probes %>% 
+  mutate(relatedness= dico[as.character(relatedness)]) %>% 
+  mutate(control=dico[as.character(control)])
+```
+
+
+## get rtv in dtf probes
 
 
