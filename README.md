@@ -17,7 +17,7 @@ I coded the SART task using the information from the [following site](https://sc
 
 I based my experiment on the [Seli 2016 article](https://doi.org/10.1016/j.concog.2016.02.002), but I added some novelties. Their results was that task difficulty affected differently "deliberate" (intentional) and "spontaneous" (unintentional) mind wandering (*See Figure 1*). Their point was that it is an important distinction to make, and they hadn't done it, they wouldn't have found any effect. In order to create an easy version of the SART, they just presented the number in ascending order, instead of in a random fashion.
 
-![Figure 1](https://github.com/FlorianLeprevost/SART_PCBS/blob/master/seli.jpg)
+![Figure 1](seli.jpg)
 
 In COGSCI311 class, we had to think of a new experiment, so I programmed a simplified version of [what I thought of](csproject.pdf).
 Instead of using binary choice (Mind wandering or on-task thoughts) I used Likert scales that may more precisely reflect the subjects experience ("how related are your thoughts to the task?"). I also wanted to introduce the notion of agency that is slightly different than what Seli et al. call intention, with the following question: "how in control of your thoughts did you feel just before the probe?"
@@ -176,4 +176,4 @@ for i in range(repetitions):
 # 2) Data
 To have some data to analyse, I made two persons pass a reduced version of the experiment (only one block in each condition = approx. 15 minutes).
 
-Then I used Rmarkdown to go through and document the data analysis: please see the [data_analysis_SART.html](data_analysis_SART.html) ou [.Rmd](data_analysis_SART.Rmd) in the folder for more details.
+Then I used Rmarkdown to go through and document the data analysis: please see the [html page](https://florianleprevost.github.io/SART_PCBS/data_analysis_SART.html) or the [Rmarkdown document](data_analysis_SART.Rmd) in the folder for more details.
