@@ -2,7 +2,10 @@
 title: "Data analysis"
 author: "Florian Leprevost"
 date: "21/11/2019"
-output: html_document
+output:
+  prettydoc::html_pretty:
+    theme: leonids
+    highlight: github
 ---
 
 ```{r setup, include=FALSE}
@@ -35,7 +38,7 @@ List of data wrangling and analysis to do:
   - [ ] MVPA?
   
 
-#Dataframe
+# 1) Dataframe
 Need the tidyverse
 
 ```{r message=F, warning=F}
