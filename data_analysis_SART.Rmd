@@ -20,9 +20,9 @@ List of data wrangling and analysis to do:
   - [x] Change .txt files into .csv before reading them
   - [x] Add subject id and difficulty
   
-- [ ] Augment the dataframe with:
-  - [ ] probes results (need to be converted from key value to numbers --> 1-9 = 49-57)
-  - [ ] reaction time variability in the last 8 trials (see [Bastian & Sackur 2013](https://www.frontiersin.org/articles/10.3389/fpsyg.2013.00573/full) )
+- [x] Augment the dataframe with:
+  - [x] probes results (need to be converted from key value to numbers --> 1-9 = 49-57)
+  - [x] reaction time variability in the last 8 trials (see [Bastian & Sackur 2013](https://www.frontiersin.org/articles/10.3389/fpsyg.2013.00573/full) )
   - [ ] mean reaction time in the 8 preceding trials
   
 - Try and reproduce Seli's results
@@ -38,20 +38,20 @@ List of data wrangling and analysis to do:
   - [ ] MVPA?
   
 
-# 1) Dataframe
+# 2. Dataframe 
 Need the tidyverse
 
 ```{r message=F, warning=F}
 library(tidyverse)
 ```
-## xpd (SART) files
+## 2.1 SART files (.xpd)
 
-read xpd with function from documentation
+Read xpd with function from documentation
 ```{r}
-setwd('C:/Users/install/SART_PCBS')
+#setwd('C:/Users/install/SART_PCBS')
 source('expyriment_data.R')
 ```
-read and add difficulty
+Read and add difficulty
 ```{r message=F, warning=F}
 dtf_sart_easy= read.expyriment.data("data", "SART_task_easy")
 dtf_sart_normal= read.expyriment.data("data", "SART_task_0")
@@ -62,7 +62,7 @@ dtf_sart_easy <- dtf_sart_easy %>%
 dtf_sart_normal <- dtf_sart_normal %>% 
   mutate(difficulty=1)
 ```
-join
+Join
 ```{r}
 dtf_sart = bind_rows(dtf_sart_easy, dtf_sart_normal)
 glimpse(dtf_sart)
@@ -70,10 +70,10 @@ glimpse(dtf_sart)
 
 
 
-## txt (probes) files
+## 2.2 Probes files (.txt)
 
 
-change txt files (probe data) in csv before transforming them in dataframes
+Change txt files (probe data) in csv before transforming them in dataframes
 
 ```{r message=F, warning=F}
 files <- list.files(pattern="*.txt")
@@ -88,7 +88,7 @@ files_easy = grep("^probe_data_easy", files, value=T)
 files_normal = grep("^probe_data_easy", files, value=T, invert=T)
 ```
 
-tried the following complicated method but it didn't work
+Tried the following complicated method but it didn't work
 ```{r eval=FALSE}
 #get the difficulty indice and the subject id
 difficulty=list()
@@ -117,7 +117,7 @@ for (ind in length(several_dtf)){
 dtf_probes = do.call(rbind, several_dtf)
 
 ```
-so i cheated a little, using the fact that the subject's files are in order. I indeed used the .id parameter to re-generate subject_id. Then I used mutate to add difficulty
+So i cheated a little, using the fact that the subject's files are in order. I indeed used the .id parameter to re-generate subject_id. Then I used mutate to add difficulty
 ```{r message=F, warning=F}
 #add subject-id
 several_dtf_easy = lapply(files_easy, read.csv)
@@ -139,7 +139,7 @@ dtf_probes = bind_rows(dtf_probes_easy, dtf_probes_normal)
 glimpse(dtf_probes)
 ```
 
-simple method to transform the keys into numbers
+Simple method to transform the keys into numbers
 ```{r}
 #create some kind of dictionnary
 dico= 1:9
@@ -148,9 +148,119 @@ names(dico)=49:57
 dtf_probes <- dtf_probes %>% 
   mutate(relatedness= dico[as.character(relatedness)]) %>% 
   mutate(control=dico[as.character(control)])
+
+glimpse(dtf_probes)
 ```
 
 
-## get rtv in dtf probes
+## 2.3 Get rtv in dtf probes
+```{r}
+indices = -8:-1
+
+list_mean=list()
+list_rtv=list()
+
+for (probe in 1:nrow(dtf_probes))
+{
+  #I realised I didn't control the first probe is not after 8 trials
+  if (dtf_probes$trial_number[probe] >= 8)
+  {
+    data_interest <- dtf_sart %>% 
+      filter(subject_id==dtf_probes$subject_id[probe],
+             block_name==dtf_probes$block_number[probe], 
+             difficulty ==dtf_probes$difficulty[probe])
+    
+    eight_trials=dtf_probes$trial_number[probe] + indices
+    mean_rt = mean(data_interest$rt[eight_trials], na.rm=T)
+    rtv= sd(data_interest$rt[eight_trials], na.rm=T)
+  }
+  else {
+    mean_rt=as.numeric(NA)
+    rtv=as.numeric(NA)
+  }
+  list_mean = c(list_mean, mean_rt)
+  list_rtv = c(list_rtv,rtv)
+}
+
+#add it in dataframe
+dtf_probes$mean_RT = unlist(list_mean)
+dtf_probes$RTV = unlist(list_rtv)
+
+```
+# 3.EDA
+## EDA Plots
+```{r}
+attach(dtf_probes)
+par(mfrow=c(2,2))
+hist(control)
+hist(relatedness)
+hist(RTV)
+hist(mean_RT)
+detach(dtf_probes)
+
+
+ggplot(dtf_probes, aes(x=relatedness, y=control, size=RTV, color= difficulty))+
+  geom_point()
+
+ggplot(dtf_probes, aes(x=relatedness, y=mean_RT))+
+  geom_point()+
+  facet_wrap(~ difficulty)
+
+ggplot(dtf_probes, aes(x=control, y=mean_RT))+
+  geom_point()+
+  facet_wrap(~ difficulty)
+
+ggplot(dtf_probes, aes(x=relatedness, y=RTV))+
+  geom_point()+
+  facet_wrap(~ difficulty)
+
+ggplot(dtf_probes, aes(x=control, y=RTV))+
+  geom_point()+
+  facet_wrap(~ difficulty)
+
+
+
+```
+
+The plots seem to indicate several things
+- control and relatedness seem independent
+- RTV seem predicted by relatedness (especially in the normal difficulty condition)
+- RTV seem larger in the easy difficulty condition
+- 
+
+# 3.2 Basics stats
+We can follow with some statistical tests
+```{r}
+#independence of control and relatedness
+chisq.test(dtf_probes$control, dtf_probes$relatedness)
+```
+Control & relatedness are significantly independent.
+
+Linear regressions
+```{r}
+summary(lm(RTV~ control+relatedness+difficulty, dtf_probes))
+```
+Only **difficulty** is a significant predictor of RTV.
+
+```{r}
+summary(lm(mean_RT~ control+relatedness+difficulty, dtf_probes))
+```
+
+```{r}
+summary(lm(RTV~ control*difficulty, dtf_probes))
+
+```
+But with only difficulty and control (and their interaction effect), control is almost a significant predictor of RTV.
+
+## 3.3 Reproduce Seli's
+
+```{r}
+
+data_seli <- dtf_probes %>% 
+  mutate(intention=ifelse(control>4, "deliberate", "spontaneous")) %>% 
+  filter(relatedness<5)
+```
+
+
 
 
