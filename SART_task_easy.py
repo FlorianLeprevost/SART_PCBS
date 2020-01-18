@@ -1,16 +1,23 @@
-"""This programm launches an EASY sustained-attention-to-response task (SART; https://scienceofbehaviorchange.org/measures/sustained-attention-to-response-task/)
-Make sure your arguments are correct, the following is the classic SART:
+"""Launches a sustained-attention-to-response task (SART; https://scienceofbehaviorchange.org/measures/sustained-attention-to-response-task/)
+The following are classic SART parameters used in Mind wandering experiments.
 
-Practice block :
-    nb_el_block_p = 160
-    nb_probes_p = 14
-Real blocks :
-    nb_block_r = 4
-    nb_el_block_r = 260
-    nb_probes_r = 6
+Args:
+    None
 
+Parameters to determine before launching
+    Practice block :
+        nb_el_block_p = 160
+        nb_nogo_p = 8
+        nb_probes_p = 14
+    Real blocks :
+        nb_block_r = 4
+        nb_el_block_r = 260
+        nb_nogo_r = 18
+        nb_probes_r = 6
 
-
+Returns:
+    A xpd file with the RT and performance of each trial in a "data" folder (SART_task_subjectid_date+time.xpd")
+    A txt file with ratings and RT of probes (probe_data_subject_id.txt)
 """
 from expyriment import control, stimuli, design, misc
 from random import randint
@@ -32,6 +39,7 @@ nb_probes_r = 6
 
 #creer les probes
 def probes():
+    """Displays thought probes and return the answers"""
 
     instructions = stimuli.TextScreen(heading = "Hold your thoughts!",text="From 1 to 9.\
     \n How are your thoughts related to the task?\
@@ -50,6 +58,8 @@ def probes():
 
 #determine which trials are gonna have a probe
 def probe_random(nb_el_block, nb_probes):
+    """Determines after which trials the thought probes are going to appear"""
+
     sub_block = round(nb_el_block/nb_probes)
     limits = round(0.1*sub_block)
     probe_trials=[]
@@ -62,6 +72,12 @@ def probe_random(nb_el_block, nb_probes):
 
 #fait un block
 def blocks(nb_el_block, nb_probes, exp, block_name):
+    """Run a block of trials with the inputed parameters
+    Saves in the expyriment data file : subject_id, stimulus (digit), button pressed (always space), RT , error, block name
+    Saves in the manually created data file : block name, trial number, reponse and rt to both Probes
+
+    Is used once for the practice block and another number of time (chosen in the parameters) for the real blocks
+    """
     #random size out of 5
     font_sizes_list = [48, 72, 94, 100, 120 ]
 
@@ -105,7 +121,7 @@ def blocks(nb_el_block, nb_probes, exp, block_name):
 
 
 def main(exp):
-#crée data file for probes (and reaction time variability)
+    """Displays the instructions and successively lauches each block """
 
 #practice block
     instructions = stimuli.TextScreen(heading = "Practise", text="Thank you for participating in this experiment. \
@@ -139,14 +155,14 @@ def main(exp):
 
 
 
-## MAIN
+## initialize xp
 exp = design.Experiment(name="SART")
 control.set_develop_mode(on=False)  ## Set develop mode. Comment for real experiment
 control.initialize(exp)
 control.start()
 exp.data_variable_names = ["digit", "btn", "rt", "error", "block_name"]
 
-#fichier probes
+#creation probe files
 data_probe_name = ['probe_data_easy', str(exp.subject)]
 data_file_name = ['probe_data_easy', str(exp.subject), '.txt']
 globals()[''.join(data_probe_name)] = open(''.join(data_file_name), "w")

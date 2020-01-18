@@ -1,16 +1,23 @@
-"""This programm launches a sustained-attention-to-response task (SART; https://scienceofbehaviorchange.org/measures/sustained-attention-to-response-task/)
-Make sure your arguments are correct, the following is the classic SART used in Mind wandering experiments
+"""Launches a sustained-attention-to-response task (SART; https://scienceofbehaviorchange.org/measures/sustained-attention-to-response-task/)
+The following are classic SART parameters used in Mind wandering experiments.
 
-Practice block :
-    nb_el_block_p = 160
-    nb_nogo_p = 8
-    nb_probes_p = 14
-Real blocks :
-    nb_block_r = 4
-    nb_el_block_r = 260
-    nb_nogo_r = 18
-    nb_probes_r = 6
+Args:
+    None
 
+Parameters to determine before launching
+    Practice block :
+        nb_el_block_p = 160
+        nb_nogo_p = 8
+        nb_probes_p = 14
+    Real blocks :
+        nb_block_r = 4
+        nb_el_block_r = 260
+        nb_nogo_r = 18
+        nb_probes_r = 6
+
+Returns:
+    A xpd file with the RT and performance of each trial in a "data" folder (SART_task_subjectid_date+time.xpd")
+    A txt file with ratings and RT of probes (probe_data_subject_id.txt)
 """
 
 from expyriment import control, stimuli, design, misc
@@ -135,7 +142,6 @@ def blocks(nb_el_block, nb_nogo, nb_probes, exp, block_name):
 
 def main(exp):
     """Displays the instructions and successively lauches each block """
-#crée data file for probes (and reaction time variability)
 
 #practice block
     instructions = stimuli.TextScreen(heading = "Practise", text="Thank you for participating in this experiment. \
@@ -169,14 +175,14 @@ def main(exp):
 
 
 
-## MAIN
+## initialize xp
 exp = design.Experiment(name="SART")
 control.set_develop_mode(on=False)  ## Set develop mode. Comment for real experiment
 control.initialize(exp)
 control.start()
 exp.data_variable_names = ["digit", "btn", "rt", "error", "block_name"]
 
-#fichier probes
+#creation probe files
 data_probe_name = ['probe_data', str(exp.subject)]
 data_file_name = ['probe_data', str(exp.subject), '.txt']
 globals()[''.join(data_probe_name)] = open(''.join(data_file_name), "w")
