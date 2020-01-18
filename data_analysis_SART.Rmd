@@ -229,7 +229,7 @@ The plots seem to indicate several things
 - 
 
 # 3.2 Basics stats
-We can follow with some statistical tests
+We can follow with some statistical tests (I know the data is not normal, but I don't really know about the alternative, so this is just some ideas)
 ```{r}
 #independence of control and relatedness
 chisq.test(dtf_probes$control, dtf_probes$relatedness)
@@ -272,6 +272,8 @@ ggplot(data_seli, aes(x=as.factor(difficulty), fill=as.factor(on_off)))+
   geom_bar()+
   facet_grid(~ intention)
 ```
+
+
 Not really reproduced: both deliberate and spontaneous mindwandering increase with difficulty
 
 # 4. Conclusion
