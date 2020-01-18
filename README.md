@@ -5,6 +5,8 @@ What you can find in this document
 
 I then did some data analysis in ***R***. Please follow [this link](https://florianleprevost.github.io/SART_PCBS/data_analysis_SART.html) to the html page from the Rmd document I wrote.
 
+To see a prettier version of this, go to [the GitHub Page](https://florianleprevost.github.io/SART_PCBS/) - although figures don't always load it seems.
+
 # 1) Sustained Attention to Response Task
 
 ## 1.1) SART  explanation and steps
@@ -39,7 +41,7 @@ What I had to do
 
 
 ### 1.1.4) Difficulty levels
-Again, I used I used the [Seli 2016 article](https://doi.org/10.1016/j.concog.2016.02.002) to create the easy SART task.
+Again, I used I used the [Seli 2016 article](https://doi.org/10.1016/j.concog.2016.02.002) to create the easy SART task. The easy version is just that the numbers appear in ascending order so are predictable, so the task is even easier.
 - [x] change the way block lists are created
 
 ## 1.2) SART code
@@ -174,6 +176,6 @@ for i in range(repetitions):
         block.append(j)
 ```
 # 2) Data
-To have some data to analyse, I made two persons pass a reduced version of the experiment (only one block in each condition = approx. 15 minutes).
+To have some data to analyse, I made two persons pass a reduced version of the experiment (only one block in each condition (easy and normal) = approx. 15 minutes).
 
 Then I used Rmarkdown to go through and document the data analysis: please see the [html page](https://florianleprevost.github.io/SART_PCBS/data_analysis_SART.html) or the [Rmarkdown document](data_analysis_SART.Rmd) in the folder for more details.
