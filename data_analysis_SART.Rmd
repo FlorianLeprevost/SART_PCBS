@@ -23,12 +23,12 @@ List of data wrangling and analysis to do:
 - [x] Augment the dataframe with:
   - [x] probes results (need to be converted from key value to numbers --> 1-9 = 49-57)
   - [x] reaction time variability in the last 8 trials (see [Bastian & Sackur 2013](https://www.frontiersin.org/articles/10.3389/fpsyg.2013.00573/full) )
-  - [ ] mean reaction time in the 8 preceding trials
+  - [x] mean reaction time in the 8 preceding trials
   
 - Try and reproduce Seli's results
-  - [ ] calculate mindwandering rate by type
+  - [x] calculate mindwandering rate by type *(finally I only plotted it)*
     - (number of deliberate mindwandering reports on total number of reports reports)
-  - [ ] bin categories to match their data 
+  - [x] bin categories to match their data 
     - deliberate or spontaneous mind wandering = controlled (6-9) or uncontrolled (1-4) unrelated thoughts (1-4)
   - [ ] mixed ANOVA (with difficulty as between subject, mind-wandering type as within subject, and rate as dependent variable) 
   
@@ -189,7 +189,7 @@ dtf_probes$RTV = unlist(list_rtv)
 ```
 # 3.EDA
 ## EDA Plots
-```{r}
+```{r warning=F}
 attach(dtf_probes)
 par(mfrow=c(2,2))
 hist(control)
@@ -199,7 +199,7 @@ hist(mean_RT)
 detach(dtf_probes)
 
 
-ggplot(dtf_probes, aes(x=relatedness, y=control, size=RTV, color= difficulty))+
+ggplot(dtf_probes, aes(x=relatedness, y=control, size=RTV, color= as.factor(difficulty)))+
   geom_point()
 
 ggplot(dtf_probes, aes(x=relatedness, y=mean_RT))+
@@ -245,7 +245,7 @@ Only **difficulty** is a significant predictor of RTV.
 ```{r}
 summary(lm(mean_RT~ control+relatedness+difficulty, dtf_probes))
 ```
-
+Nothing
 ```{r}
 summary(lm(RTV~ control*difficulty, dtf_probes))
 
@@ -254,13 +254,25 @@ But with only difficulty and control (and their interaction effect), control is 
 
 ## 3.3 Reproduce Seli's
 
+Reshape data to match
 ```{r}
 
 data_seli <- dtf_probes %>% 
   mutate(intention=ifelse(control>4, "deliberate", "spontaneous")) %>% 
-  filter(relatedness<5)
+  mutate(on_off= ifelse(relatedness<6, "off", "on"))
 ```
 
+```{r}
+#switch on_off order
 
+data_seli$on_off <- factor(data_seli$on_off, levels = c("on", "off"))
 
+#plot
+ggplot(data_seli, aes(x=as.factor(difficulty), fill=as.factor(on_off)))+
+  geom_bar()+
+  facet_grid(~ intention)
+```
+Not really reproduced: both deliberate and spontaneous mindwandering increase with difficulty
 
+# 4. Conclusion
+I would have like to try more analysis, but I lack time, and it wouldn't be much interesting with as little data anyway. I still feel I learned a lot by doing such a big project, from the conception of the experiment to automatizing the data analysis.
