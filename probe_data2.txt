@@ -1,0 +1,8 @@
+block_number, trial_number, relatedness, rt_rel, control, rt_con
+practice,9,56,11898,52,14566
+real1,29,50,7591,55,5758
+real1,54,56,7981,51,4027
+real1,125,50,18838,54,2530
+real1,176,56,4039,56,2036
+real1,207,56,4798,50,1239
+real1,231,51,4412,50,1557
