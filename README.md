@@ -124,8 +124,18 @@ nb_probes_p = 1
 ...
 ```
 - I also put the block script in a function (called **blocks**) to be able to call it several times
-- I created a function to display the probes. (**probes**) and
-- A last one to make sure the probes appeared at pseudo-random interval, not too close to each other (**probe-random**).
+- I created a function to display the probes. (**probes**)
+```python
+instructions = stimuli.TextScreen(heading = "Hold your thoughts!",text="From 1 to 9.\
+\n How are your thoughts related to the task?\
+\n [totally unrelated] 1 2 3 4 5 6 7 8 9 [totally related]")
+instructions.present()
+button_r, rt_r = exp.keyboard.wait(misc.constants.K_ALL_DIGITS)
+```
+The *misc.constants.K_ALL_DIGITS* part refer to the numbers on top of the keyboard. It might not be so practical, because you have to have Caps Lock one to answer, but I thought it reflected better the Likert scale than the Numeric keypad. Although I'm not sure it works on macs.
+
+
+- A last function to make sure the probes appeared at pseudo-random interval, not too close to each other (**probe-random**).
 
 ```python
 def probe_random(nb_el_block, nb_probes):

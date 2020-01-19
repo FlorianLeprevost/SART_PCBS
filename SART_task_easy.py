@@ -129,6 +129,7 @@ def main(exp):
     \nYou must press spacebar everytime you see a number EXCEPT when it's the number 3. \
     \n\n You also need to know that at random moments, 'thought probes' are going to appear. \
     \nThose probes inquire about what you were thinking about, just before they appeared.\
+    \n(WARNING: to answer the probes, you should use the numbers on top of your keyboard, with Caps Lock on !!!)\
     \n\nIf you understood well and are ready to do a practice trial, press space bar")
     instructions.present()
     exp.keyboard.wait(misc.constants.K_SPACE)
